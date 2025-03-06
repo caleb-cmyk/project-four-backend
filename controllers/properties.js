@@ -31,7 +31,10 @@ router.post("/new", verifyToken, async (req, res) => {
 
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const propertyById = await Property.findById(req.params.propertyId).populate("hostId");
+    const propertyById = await Property.findById(req.params.propertyId).populate(
+      {path: "hostId", select: "hostId firstName lastName"}
+      // {path: "datesUnavailable", }
+    );
 
     if (!propertyById) {
       return res.status(404).json({ err: "Property not found." });
@@ -44,6 +47,17 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
 });
 
 router.get("/", verifyToken, async (req, res) => {
+  try {
+    
+    const propertiesByHostId = await Property.find({ hostId: req.user._id });
+    
+    res.json({ propertiesByHostId });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
+router.get("/random", verifyToken, async (req, res) => {
   try {
 
 // monogoDB aggregation, limit res, randomise.

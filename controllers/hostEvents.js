@@ -5,13 +5,16 @@ const verifyToken = require("../middleware/verify-token");
 
 router.post("/new", verifyToken, async (req, res) => {
   try {
-    const hostEventInDatabase = await HostEvent.findOne({
-        propertyId: req.body.propertyId,
-    });
 
-    if (hostEventInDatabase) {
-      return res.status(409).json({ err: "Stay already requested." });
-    }
+  // check if dates requested are within dates already requested && unavailable
+
+  //   const hostEventInDatabase = await HostEvent.findOne({
+  //       propertyId: req.body.propertyId,
+  //   });
+
+  //   if (hostEventInDatabase) {
+  //     return res.status(409).json({ err: "Stay already requested." });
+  //   }
 
     const hostEvent = await HostEvent.create({
       hostId: req.body.hostId,
