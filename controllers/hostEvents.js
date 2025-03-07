@@ -32,4 +32,14 @@ router.post("/new", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/:propertyId", verifyToken, async (req, res) => {
+  try {
+    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId });
+
+    res.json({ hostEventsByPropertyId });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
 module.exports = router;

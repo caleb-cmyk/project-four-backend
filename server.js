@@ -11,6 +11,10 @@ const usersRouter = require('./controllers/users');
 const propertiesRouter = require('./controllers/properties');
 const hostEventsRouter = require('./controllers/hostEvents');
 
+//middleware test
+const verify = require('./middleware/test');
+
+
 mongoose.connect(process.env.MONGODB_URI);
 
 mongoose.connection.on('connected', () => {
@@ -21,6 +25,11 @@ mongoose.connection.on('connected', () => {
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
+
+// middleware test
+app.post('/test', verify, (req, res) => {
+  res.send("error")
+} )
 
 // Routes
 app.use('/auth', authRouter);

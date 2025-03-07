@@ -48,7 +48,6 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    
     const propertiesByHostId = await Property.find({ hostId: req.user._id });
     
     res.json({ propertiesByHostId });
