@@ -12,7 +12,7 @@ const propertiesRouter = require('./controllers/properties');
 const hostEventsRouter = require('./controllers/hostEvents');
 
 //middleware test
-const verify = require('./middleware/test');
+// const verify = require('./middleware/test');
 
 
 mongoose.connect(process.env.MONGODB_URI);
@@ -27,9 +27,9 @@ app.use(express.json());
 app.use(logger('dev'));
 
 // middleware test
-app.post('/test', verify, (req, res) => {
-  res.send("error")
-} )
+// app.post('/test', verify, (req, res) => {
+//   res.send("error")
+// } )
 
 // Routes
 app.use('/auth', authRouter);

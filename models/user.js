@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       default: "Guest",
     },
     dateOfBirth: {
-      type: String,
+      type: Date,
       required: true,
     },
     gender: {

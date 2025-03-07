@@ -34,7 +34,7 @@ router.post("/new", verifyToken, async (req, res) => {
 
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId });
+    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId }).populate("guestId");
 
     res.json({ hostEventsByPropertyId });
   } catch (err) {

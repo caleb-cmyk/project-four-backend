@@ -3,29 +3,32 @@ const mongoose = require("mongoose");
 const hostEventSchema = new mongoose.Schema(
   {
     hostId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     guestId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     propertyId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Property",
       required: true,
     },
     dateStart: {
-      type: String,
+      type: Date,
       required: true,
     },
     dateEnd: {
-      type: String,
+      type: Date,
       required: true,
     },
-    confirmed: {
-      type: Boolean,
+    status: {
+      type: String,
       required: true,
-      default: false,
+      default: "pending",
     },
   },
   { timestamps: true }

@@ -33,7 +33,6 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
     const propertyById = await Property.findById(req.params.propertyId).populate(
       {path: "hostId", select: "hostId firstName lastName"}
-      // {path: "datesUnavailable", }
     );
 
     if (!propertyById) {
@@ -48,7 +47,8 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const propertiesByHostId = await Property.find({ hostId: req.user._id });
+    const propertiesByHostId = await Property.find({ hostId: req.user._id }).populate(
+      {path: "hostId", select: "hostId firstName lastName"});
     
     res.json({ propertiesByHostId });
   } catch (err) {
