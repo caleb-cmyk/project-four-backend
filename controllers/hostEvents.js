@@ -34,7 +34,8 @@ router.post("/new", verifyToken, async (req, res) => {
 
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId }).populate("guestId");
+    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId }).populate(
+      { path: "guestId", select: "_id firstName lastName gender countryOfResidence" });
 
     res.json({ hostEventsByPropertyId });
   } catch (err) {

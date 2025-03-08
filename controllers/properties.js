@@ -19,8 +19,8 @@ router.post("/new", verifyToken, async (req, res) => {
       countryOfProperty: req.body.countryOfProperty,
       postcode: req.body.postcode,
       addressLine: req.body.addressLine,
-      validated: req.body.validated,
-      listed: req.body.listed,
+      // validated: req.body.validated,
+      // listed: req.body.listed,
     });
 
     res.status(201).json(property);
