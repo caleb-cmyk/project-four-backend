@@ -5,16 +5,15 @@ const verifyToken = require("../middleware/verify-token");
 
 router.post("/new", verifyToken, async (req, res) => {
   try {
+    // check if dates requested are within dates already requested && unavailable
 
-  // check if dates requested are within dates already requested && unavailable
+    //   const hostEventInDatabase = await HostEvent.findOne({
+    //       propertyId: req.body.propertyId,
+    //   });
 
-  //   const hostEventInDatabase = await HostEvent.findOne({
-  //       propertyId: req.body.propertyId,
-  //   });
-
-  //   if (hostEventInDatabase) {
-  //     return res.status(409).json({ err: "Stay already requested." });
-  //   }
+    //   if (hostEventInDatabase) {
+    //     return res.status(409).json({ err: "Stay already requested." });
+    //   }
 
     const hostEvent = await HostEvent.create({
       hostId: req.body.hostId,
@@ -34,10 +33,34 @@ router.post("/new", verifyToken, async (req, res) => {
 
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const hostEventsByPropertyId = await HostEvent.find({ propertyId: req.params.propertyId }).populate(
-      { path: "guestId", select: "_id firstName lastName gender countryOfResidence" });
+    const hostEventsByPropertyId = await HostEvent.find({
+      propertyId: req.params.propertyId,
+    }).populate({
+      path: "guestId",
+      select: "_id firstName lastName gender countryOfResidence",
+    });
 
     res.json({ hostEventsByPropertyId });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
+// https://stackoverflow.com/questions/32811510/mongoose-findoneandupdate-doesnt-return-updated-document
+
+router.put("/:hostEventId/edit", verifyToken, async (req, res) => {
+  try {
+    const hostEvent = await HostEvent.findByIdAndUpdate(
+      req.params.hostEventId,
+      { status: req.body.status },
+      { new : true }
+    );
+
+    if (!hostEvent) {
+      return res.status(404).json({ err: "Event not found" });
+    }
+    
+    res.json({ hostEvent });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
