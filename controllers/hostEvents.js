@@ -33,18 +33,35 @@ router.post("/new", verifyToken, async (req, res) => {
 
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const hostEventsByPropertyId = await HostEvent.find({
+    const { status } = req.query;
+    const hostEventsByPropertyIdAndStatus = await HostEvent.find({
       propertyId: req.params.propertyId,
+      ...(status && { status })
     }).populate({
       path: "guestId",
       select: "_id firstName lastName gender countryOfResidence",
     });
 
-    res.json({ hostEventsByPropertyId });
+    res.json({ hostEventsByPropertyIdAndStatus });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
 });
+
+// router.get("/:propertyId", verifyToken, async (req, res) => {
+//   try {
+//     const hostEventsByPropertyId = await HostEvent.find({
+//       propertyId: req.params.propertyId,
+//     }).populate({
+//       path: "guestId",
+//       select: "_id firstName lastName gender countryOfResidence",
+//     });
+
+//     res.json({ hostEventsByPropertyId });
+//   } catch (err) {
+//     res.status(500).json({ err: err.message });
+//   }
+// });
 
 // https://stackoverflow.com/questions/32811510/mongoose-findoneandupdate-doesnt-return-updated-document
 
