@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "Guest",
     },
+    profilePhoto: {
+      type: String,
+      required: true,
+      default: "NIL",
+    },
     dateOfBirth: {
       type: Date,
       required: true,

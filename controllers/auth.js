@@ -23,6 +23,7 @@ router.post("/sign-up", async (req, res) => {
       phoneCountry: req.body.phoneCountry,
       phoneNumber: req.body.phoneNumber,
       userType: req.body.userType,
+      profilePhoto: req.body.profilePhoto,
       dateOfBirth: req.body.dateOfBirth,
       gender: req.body.gender,
       countryOfResidence: req.body.countryOfResidence,

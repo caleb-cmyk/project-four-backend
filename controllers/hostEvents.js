@@ -31,7 +31,7 @@ router.post("/new", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/:propertyId", verifyToken, async (req, res) => {
+router.get("/property/:propertyId", verifyToken, async (req, res) => {
   try {
     const { status } = req.query;
     const hostEventsByPropertyIdAndStatus = await HostEvent.find({
@@ -43,6 +43,23 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
     });
 
     res.json({ hostEventsByPropertyIdAndStatus });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
+router.get("/trips/:guestId", verifyToken, async (req, res) => {
+  try {
+    const { status } = req.query;
+    const hostEventsByGuestIdAndStatus = await HostEvent.find({
+      guestId: req.params.guestId,
+      ...(status && { status })
+    }).populate({
+      path: "hostId",
+      select: "_id firstName lastName gender countryOfResidence",
+    });
+
+    res.json({ hostEventsByGuestIdAndStatus });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
