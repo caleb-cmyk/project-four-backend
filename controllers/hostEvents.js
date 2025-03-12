@@ -2,27 +2,17 @@ const express = require("express");
 const router = express.Router();
 const HostEvent = require("../models/hostEvent");
 const verifyToken = require("../middleware/verify-token");
+const verifyDate = require("../middleware/verify-date");
 
-router.post("/new", verifyToken, async (req, res) => {
+router.post("/new", verifyToken, verifyDate, async (req, res) => {
   try {
-    // check if dates requested are within dates already requested && unavailable
-
-    //   const hostEventInDatabase = await HostEvent.findOne({
-    //       propertyId: req.body.propertyId,
-    //   });
-
-    //   if (hostEventInDatabase) {
-    //     return res.status(409).json({ err: "Stay already requested." });
-    //   }
-
     const hostEvent = await HostEvent.create({
       hostId: req.body.hostId,
       guestId: req.user._id,
       propertyId: req.body.propertyId,
-      postcode: req.body.postcode,
       dateStart: req.body.dateStart,
       dateEnd: req.body.dateEnd,
-      confirmed: req.body.confirmed,
+      status: req.body.status,
     });
 
     res.status(201).json(hostEvent);
@@ -30,6 +20,25 @@ router.post("/new", verifyToken, async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 });
+
+
+// ============= correct .post below ===============
+// router.post("/new", verifyToken, async (req, res) => {
+//   try {
+//     const hostEvent = await HostEvent.create({
+//       hostId: req.body.hostId,
+//       guestId: req.user._id,
+//       propertyId: req.body.propertyId,
+//       dateStart: req.body.dateStart,
+//       dateEnd: req.body.dateEnd,
+//       status: req.body.status,
+//     });
+
+//     res.status(201).json(hostEvent);
+//   } catch (err) {
+//     res.status(500).json({ err: err.message });
+//   }
+// });
 
 router.get("/property/:propertyId", verifyToken, async (req, res) => {
   try {
@@ -40,6 +49,9 @@ router.get("/property/:propertyId", verifyToken, async (req, res) => {
     }).populate({
       path: "guestId",
       select: "_id firstName lastName gender countryOfResidence",
+    }).populate({
+      path: "propertyId",
+      select: "propertyName countryOfProperty addressLine Postcode",
     });
 
     res.json({ hostEventsByPropertyIdAndStatus });
@@ -57,6 +69,9 @@ router.get("/trips/:guestId", verifyToken, async (req, res) => {
     }).populate({
       path: "hostId",
       select: "_id firstName lastName gender countryOfResidence",
+    }).populate({
+      path: "propertyId",
+      select: "propertyName countryOfProperty addressLine Postcode",
     });
 
     res.json({ hostEventsByGuestIdAndStatus });

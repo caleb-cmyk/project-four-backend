@@ -45,6 +45,31 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
   }
 });
 
+
+// --------------------------------------
+// router.get("/", verifyToken, async (req, res) => {
+
+// });
+
+// --------------------------------------
+// router.get("/property/:propertyId", verifyToken, async (req, res) => {
+//   try {
+//     const { status } = req.query;
+//     const hostEventsByPropertyIdAndStatus = await HostEvent.find({
+//       propertyId: req.params.propertyId,
+//       ...(status && { status })
+//     }).populate({
+//       path: "guestId",
+//       select: "_id firstName lastName gender countryOfResidence",
+//     });
+
+//     res.json({ hostEventsByPropertyIdAndStatus });
+//   } catch (err) {
+//     res.status(500).json({ err: err.message });
+//   }
+// });
+// -----------------------------------------------
+
 router.get("/", verifyToken, async (req, res) => {
   try {
     const propertiesByHostId = await Property.find({ hostId: req.user._id }).populate(
