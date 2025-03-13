@@ -6,13 +6,29 @@ const verifyDate = require("../middleware/verify-date");
 
 router.post("/new", verifyToken, verifyDate, async (req, res) => {
   try {
+    // https://www.geeksforgeeks.org/how-to-find-objects-between-two-dates-mongodb/
+    // https://expressjs.com/en/guide/error-handling.html
+    
+    const { hostId, propertyId, dateStart, dateEnd } = req.body;
+    const guestId = req.user._id;
+
+    const existingHostEvent = await HostEvent.findOne({
+      propertyId,
+      $or: [
+        { dateStart: { $lt: dateEnd }, dateEnd: { $gt: dateStart } },
+      ],
+    });
+
+    if (existingHostEvent) {
+      return res.status(400).json({ message: "These dates are unavailable." });
+    }
+
     const hostEvent = await HostEvent.create({
-      hostId: req.body.hostId,
-      guestId: req.user._id,
-      propertyId: req.body.propertyId,
-      dateStart: req.body.dateStart,
-      dateEnd: req.body.dateEnd,
-      status: req.body.status,
+      hostId,
+      guestId,
+      propertyId,
+      dateStart,
+      dateEnd
     });
 
     res.status(201).json(hostEvent);
@@ -22,7 +38,7 @@ router.post("/new", verifyToken, verifyDate, async (req, res) => {
 });
 
 
-// ============= correct .post below ===============
+// ============= tried & tested .post below ===============
 // router.post("/new", verifyToken, async (req, res) => {
 //   try {
 //     const hostEvent = await HostEvent.create({

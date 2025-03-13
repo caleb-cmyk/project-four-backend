@@ -7,32 +7,41 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isBetween);
 
 const verifyDate = (req, res, next) => {
-    const {dateStart, dateEnd} = req.body;
-    const format = "YYYY-MM-DD";
-    const datePlusTwoYears = (date) => {
-    }
+  const { dateStart, dateEnd } = req.body;
+  const format = "YYYY-MM-DD";
 
-    if (!dayjs(dateStart, format, true).isValid()) {
-      return res.status(400).json({ error: "Invalid start date format." });
-    }
-    if (!dayjs(dateEnd, format, true).isValid()) {
-      return res.status(400).json({ error: "Invalid end date format." });
-    }
+  if (!dayjs(dateStart, format, true).isValid()) {
+    return res.status(400).json({ message: "Invalid start date format." });
+  }
+  if (!dayjs(dateEnd, format, true).isValid()) {
+    return res.status(400).json({ message: "Invalid end date format." });
+  }
 
-    if (dayjs(dateEnd).isSameOrBefore(dateStart)) {
-      return res.status(400).json({ error: "Start date needs to be before end date." });
-    }
+  if (dayjs(dateEnd).isSameOrBefore(dateStart)) {
+    return res
+      .status(400)
+      .json({ message: "Start date needs to be before end date." });
+  }
 
-    // dayjs('2010-10-20').isBetween('2010-10-19', dayjs('2010-10-25')) 
-    if (dayjs(dateStart).isBetween(dateStart + dateStartPlusTwoYears)) {
-      return res.status(400).json({ error: "Start date needs to be before end date." });
-    }
-      
-      next();
-    };
-    
-    module.exports = verifyDate;
-    
-    // 1. date within 2 years +/- current
-    // 3. date not booked yet
+  if (
+    !dayjs(dateStart).isBetween(dayjs().subtract(1,"day"), dayjs().add(1, "year"))
+  ) {
+    return res
+      .status(400)
+      .json({ message: "You can only book a year in advance." });
+  }
+
+  if (!dayjs(dateEnd).isBetween(dayjs().subtract(1,"day"), dayjs().add(1, "year"))) {
+    return res
+      .status(400)
+      .json({ message: "You can only book a year in advance." });
+  }
+
+  next();
+};
+
+module.exports = verifyDate;
+
+// 1. date within 2 years +/- current
+// 3. date not booked yet
 // https://day.js.org/docs/en/parse/is-valid
