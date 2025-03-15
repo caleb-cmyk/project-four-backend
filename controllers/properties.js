@@ -29,11 +29,29 @@ router.post("/new", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { propertyLocation } = req.query;
+    
+    const propertiesByLocation = await Property.find({
+      countryOfProperty: propertyLocation,
+    })
+    .populate({
+      path: "hostId",
+      select: "_id firstName lastName gender",
+    });
+
+    res.json({ propertiesByLocation });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
 router.get("/:propertyId", verifyToken, async (req, res) => {
   try {
-    const propertyById = await Property.findById(req.params.propertyId).populate(
-      {path: "hostId", select: "hostId firstName lastName"}
-    );
+    const propertyById = await Property.findById(
+      req.params.propertyId
+    ).populate({ path: "hostId", select: "hostId firstName lastName" });
 
     if (!propertyById) {
       return res.status(404).json({ err: "Property not found." });
@@ -44,6 +62,8 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 });
+
+
 
 // --------------------------------------
 // router.get("/property/:propertyId", verifyToken, async (req, res) => {
@@ -66,9 +86,10 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const propertiesByHostId = await Property.find({ hostId: req.user._id }).populate(
-      {path: "hostId", select: "hostId firstName lastName"});
-    
+    const propertiesByHostId = await Property.find({
+      hostId: req.user._id,
+    }).populate({ path: "hostId", select: "hostId firstName lastName" });
+
     res.json({ propertiesByHostId });
   } catch (err) {
     res.status(500).json({ err: err.message });
@@ -77,11 +98,12 @@ router.get("/", verifyToken, async (req, res) => {
 
 router.get("/random", verifyToken, async (req, res) => {
   try {
+    // monogoDB aggregation, limit res, randomise.
+    // https://www.mongodb.com/docs/manual/reference/method/db.collection.aggregate/
 
-// monogoDB aggregation, limit res, randomise.
-// https://www.mongodb.com/docs/manual/reference/method/db.collection.aggregate/
-
-    const propertiesByRatings = await Property.aggregate([{ $sample: { size: 2 } }]);
+    const propertiesByRatings = await Property.aggregate([
+      { $sample: { size: 2 } },
+    ]);
 
     res.json({ propertiesByRatings });
   } catch (err) {
