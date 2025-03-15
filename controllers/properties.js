@@ -29,42 +29,6 @@ router.post("/new", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/search", async (req, res) => {
-  try {
-    const { propertyLocation } = req.query;
-    
-    const propertiesByLocation = await Property.find({
-      countryOfProperty: propertyLocation,
-    })
-    .populate({
-      path: "hostId",
-      select: "_id firstName lastName gender",
-    });
-
-    res.json({ propertiesByLocation });
-  } catch (err) {
-    res.status(500).json({ err: err.message });
-  }
-});
-
-router.get("/:propertyId", verifyToken, async (req, res) => {
-  try {
-    const propertyById = await Property.findById(
-      req.params.propertyId
-    ).populate({ path: "hostId", select: "hostId firstName lastName" });
-
-    if (!propertyById) {
-      return res.status(404).json({ err: "Property not found." });
-    }
-
-    res.json({ propertyById });
-  } catch (err) {
-    res.status(500).json({ err: err.message });
-  }
-});
-
-
-
 // --------------------------------------
 // router.get("/property/:propertyId", verifyToken, async (req, res) => {
 //   try {
@@ -96,6 +60,24 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { propertyLocation } = req.query;
+    
+    const propertiesByLocation = await Property.find({
+      countryOfProperty: propertyLocation,
+    })
+    .populate({
+      path: "hostId",
+      select: "_id firstName lastName gender",
+    });
+
+    res.json({ propertiesByLocation });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
 router.get("/random", verifyToken, async (req, res) => {
   try {
     // monogoDB aggregation, limit res, randomise.
@@ -106,6 +88,22 @@ router.get("/random", verifyToken, async (req, res) => {
     ]);
 
     res.json({ propertiesByRatings });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+});
+
+router.get("/:propertyId", verifyToken, async (req, res) => {
+  try {
+    const propertyById = await Property.findById(
+      req.params.propertyId
+    ).populate({ path: "hostId", select: "hostId firstName lastName" });
+
+    if (!propertyById) {
+      return res.status(404).json({ err: "Property not found." });
+    }
+
+    res.json({ propertyById });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
