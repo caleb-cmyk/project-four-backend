@@ -45,12 +45,6 @@ router.get("/:propertyId", verifyToken, async (req, res) => {
   }
 });
 
-
-// --------------------------------------
-// router.get("/", verifyToken, async (req, res) => {
-
-// });
-
 // --------------------------------------
 // router.get("/property/:propertyId", verifyToken, async (req, res) => {
 //   try {
