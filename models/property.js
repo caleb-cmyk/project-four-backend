@@ -33,11 +33,6 @@ const propertySchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    // datesUnavailable: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "hostEvent",
-    //   default: null,
-    // },
   },
   { timestamps: true }
 );

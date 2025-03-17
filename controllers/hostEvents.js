@@ -37,25 +37,6 @@ router.post("/new", verifyToken, verifyDate, async (req, res) => {
   }
 });
 
-
-// ============= tried & tested .post below ===============
-// router.post("/new", verifyToken, async (req, res) => {
-//   try {
-//     const hostEvent = await HostEvent.create({
-//       hostId: req.body.hostId,
-//       guestId: req.user._id,
-//       propertyId: req.body.propertyId,
-//       dateStart: req.body.dateStart,
-//       dateEnd: req.body.dateEnd,
-//       status: req.body.status,
-//     });
-
-//     res.status(201).json(hostEvent);
-//   } catch (err) {
-//     res.status(500).json({ err: err.message });
-//   }
-// });
-
 router.get("/property/:propertyId", verifyToken, async (req, res) => {
   try {
     const { status } = req.query;
@@ -95,21 +76,6 @@ router.get("/trips/:guestId", verifyToken, async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 });
-
-// router.get("/:propertyId", verifyToken, async (req, res) => {
-//   try {
-//     const hostEventsByPropertyId = await HostEvent.find({
-//       propertyId: req.params.propertyId,
-//     }).populate({
-//       path: "guestId",
-//       select: "_id firstName lastName gender countryOfResidence",
-//     });
-
-//     res.json({ hostEventsByPropertyId });
-//   } catch (err) {
-//     res.status(500).json({ err: err.message });
-//   }
-// });
 
 // https://stackoverflow.com/questions/32811510/mongoose-findoneandupdate-doesnt-return-updated-document
 

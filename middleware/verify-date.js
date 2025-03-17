@@ -42,6 +42,4 @@ const verifyDate = (req, res, next) => {
 
 module.exports = verifyDate;
 
-// 1. date within 2 years +/- current
-// 3. date not booked yet
 // https://day.js.org/docs/en/parse/is-valid

@@ -19,8 +19,6 @@ router.post("/new", verifyToken, async (req, res) => {
       countryOfProperty: req.body.countryOfProperty,
       postcode: req.body.postcode,
       addressLine: req.body.addressLine,
-      // validated: req.body.validated,
-      // listed: req.body.listed,
     });
 
     res.status(201).json(property);
@@ -28,25 +26,6 @@ router.post("/new", verifyToken, async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 });
-
-// --------------------------------------
-// router.get("/property/:propertyId", verifyToken, async (req, res) => {
-//   try {
-//     const { status } = req.query;
-//     const hostEventsByPropertyIdAndStatus = await HostEvent.find({
-//       propertyId: req.params.propertyId,
-//       ...(status && { status })
-//     }).populate({
-//       path: "guestId",
-//       select: "_id firstName lastName gender countryOfResidence",
-//     });
-
-//     res.json({ hostEventsByPropertyIdAndStatus });
-//   } catch (err) {
-//     res.status(500).json({ err: err.message });
-//   }
-// });
-// -----------------------------------------------
 
 router.get("/", verifyToken, async (req, res) => {
   try {
@@ -73,21 +52,6 @@ router.get("/search", async (req, res) => {
     });
 
     res.json({ propertiesByLocation });
-  } catch (err) {
-    res.status(500).json({ err: err.message });
-  }
-});
-
-router.get("/random", verifyToken, async (req, res) => {
-  try {
-    // monogoDB aggregation, limit res, randomise.
-    // https://www.mongodb.com/docs/manual/reference/method/db.collection.aggregate/
-
-    const propertiesByRatings = await Property.aggregate([
-      { $sample: { size: 2 } },
-    ]);
-
-    res.json({ propertiesByRatings });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
